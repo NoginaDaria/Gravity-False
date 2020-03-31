@@ -33,11 +33,6 @@ mystem = SnowballStemmer("russian")
 russian_stopwords = stopwords.words("russian")
 tokenizer = RegexpTokenizer(r'\w+')
 
-enchant_d = enchant.Dict("ru")
-mystem = SnowballStemmer("russian")
-russian_stopwords = stopwords.words("russian")
-tokenizer = RegexpTokenizer(r'\w+')
-
 def preprocess_text(text):
     text = ' '.join(tokenizer.tokenize(text))
     tokens = tokenizer.tokenize(text)
