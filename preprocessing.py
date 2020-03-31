@@ -40,7 +40,7 @@ tokenizer = RegexpTokenizer(r'\w+')
 
 def preprocess_text(text):
     text = ' '.join(tokenizer.tokenize(text))
-    tokens = mystem.stem(text.lower()).split()
+    tokens = tokenizer.tokenize(text)
     tokens = [token for token in tokens if token not in russian_stopwords\
               and token != " " \
               and token.strip() not in punctuation \
