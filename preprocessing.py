@@ -33,14 +33,19 @@ mystem = SnowballStemmer("russian")
 russian_stopwords = stopwords.words("russian")
 tokenizer = RegexpTokenizer(r'\w+')
 
+enchant_d = enchant.Dict("ru")
+mystem = SnowballStemmer("russian")
+russian_stopwords = stopwords.words("russian")
+tokenizer = RegexpTokenizer(r'\w+')
+
 def preprocess_text(text):
-    text = ' '.join(tokenizer.tokenize(title))
+    text = ' '.join(tokenizer.tokenize(text))
     tokens = mystem.stem(text.lower()).split()
     tokens = [token for token in tokens if token not in russian_stopwords\
               and token != " " \
               and token.strip() not in punctuation \
               #and enchant_d.check(token) \
               and not token.isdigit()]
-    text = " ".join(tokens)
+    text = " ".join([mystem.stem(token) for token in set(tokens)])
     
     return text
