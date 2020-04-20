@@ -5,7 +5,7 @@ with open('page_dict.p', 'rb') as fp:
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-vectorizer = TfidfVectorizer() 
+vectorizer = TfidfVectorizer(min_df=0.02, max_df=0.1, stop_words='english')
 vectors = vectorizer.fit_transform(page_dict.values()).toarray()
 vector_map = dict(zip(page_dict.keys(), vectors.tolist()))
 import pickle
@@ -39,7 +39,7 @@ for new_group in traingroups_titledata:
                 continue
             doc_id_j, title_j, target_j = docs[j]
             all_dist.append(cosine_similarity(title, title_j))
-        X_train.append(sorted(all_dist, reverse=True)[0:15]    )
+        X_train.append(sorted(all_dist, reverse=True)[0:25]    )
 X_train = np.array(X_train)
 y_train = np.array(y_train)
 groups_train = np.array(groups_train)
