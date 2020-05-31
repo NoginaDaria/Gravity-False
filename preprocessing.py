@@ -20,6 +20,8 @@ import re
 
 import gensim
 
+from sklearn.decomposition import PCA
+
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
@@ -157,6 +159,9 @@ def tf_idf(doc_to_title, doc_to_title_nstemmed, train_test_data, w2v, train=True
             X[i:j] = cosine_add_feat(group.doc_id, n_features, vectors, w_vectors, add_data)
             i = j
 
+        pca = PCA(n_components=10)
+        X = pca.fit_transform(X)   
+
         return X, y, group_ids
     else:
         X = np.empty(shape=(data.shape[0], n_features*3+15), dtype=np.float)
@@ -169,7 +174,9 @@ def tf_idf(doc_to_title, doc_to_title_nstemmed, train_test_data, w2v, train=True
             pair_ids[i:j] = group.pair_id
             X[i:j] = cosine_add_feat(group.doc_id, n_features, vectors, w_vectors, add_data)
             i = j
-
+        
+        pca = PCA(n_components=10)  
+        X = pca.fit_transform(X)
         return X, pair_ids
     
 def best_th(cls, X, y, groups, k=5):
@@ -191,7 +198,7 @@ def best_th(cls, X, y, groups, k=5):
     return space[best], result[best] / k
  
     
-def train_classifier(clf, doc_to_title, doc_to_title_nstemmed, w2v, train_data, n_features=15, k=5, train=True, test=False, scaler_I=False):
+def train_classifier(clf, doc_to_title, doc_to_title_nstemmed, w2v, train_data, n_features=5, k=5, train=True, test=False, scaler_I=False):
     print('preparing tf-idf matrices....')
     X, y, group_ids = tf_idf(doc_to_title, doc_to_title_nstemmed, train_data, w2v, train, test, n_features)
     if scaler_I == 'st':
@@ -210,7 +217,7 @@ def train_classifier(clf, doc_to_title, doc_to_title_nstemmed, w2v, train_data, 
     return threshold, f1
     
     
-def predict_test(clf, th, doc_to_title, doc_to_title_nstemmed, w2v, train_data, test_data, n_features=15, train=False, test=True, scaler_I=False):
+def predict_test(clf, th, doc_to_title, doc_to_title_nstemmed, w2v, train_data, test_data, n_features=5, train=False, test=True, scaler_I=False):
     print('preparing tf-idf matrices....')
     X_train, y_train, group_ids_train = tf_idf(doc_to_title, doc_to_title_nstemmed, train_data, w2v, train=True, test=False, n_features = n_features)
     if scaler_I == 'st':
